@@ -21,7 +21,7 @@ class ChoiceForm(forms.Form):
             question=cleaned_data['question_id']
         ).values_list('pk', flat=True)
 
-        if choice_id not in choices_of_question:
+        if cleaned_data['choice_id'] not in choices_of_question:
             raise forms.ValidationError('The Choice does not belong to the given question!')
 
         return cleaned_data
