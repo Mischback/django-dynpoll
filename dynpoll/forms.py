@@ -36,7 +36,7 @@ class ChoiceForm(forms.Form):
             raise Exception('Choice does not exist!')
 
         from_ip = get_client_ip(request)[0]
-        if settings.DEBUG:
+        if not settings.DEBUG:
             votes = Vote.objects.filter(
                 choice__in=self.choices_of_question
             ).values_list('from_ip', flat=True)
@@ -44,5 +44,5 @@ class ChoiceForm(forms.Form):
             if from_ip in votes:
                 # TODO: don't raise error, simply redirect to result page!
                 raise forms.ValidationError('You already voted on this question!')
-            else:
-                vote = Vote.objects.create(choice=choice, from_ip=from_ip)
+
+        vote = Vote.objects.create(choice=choice, from_ip=from_ip)  # noqa

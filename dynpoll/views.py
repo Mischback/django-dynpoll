@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from dynpoll.forms import ChoiceForm
-from dynpoll.models import Choice, Question
+from dynpoll.models import Choice, Question, Vote
 from django.views.generic.edit import FormView
+from django.views.generic.base import TemplateView
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.db.models import Count
 
 
 class QuestionView(FormView):
@@ -13,7 +15,6 @@ class QuestionView(FormView):
 
     form_class = ChoiceForm
     template_name = 'dynpoll/question.html'
-    success_url = reverse_lazy('dynpoll:question', args=[1,])
 
     class QuestionViewError(Exception):
         pass
@@ -59,4 +60,24 @@ class QuestionView(FormView):
         context['dynpoll_choices'] = dynpoll_choices
 
         # return the enhanced context
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('dynpoll:question-result', args=[self.kwargs['question_id'], ])
+
+
+class QuestionResultView(TemplateView):
+
+    template_name = 'dynpoll/question_result.html'
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        question = get_object_or_404(Question, pk=self.kwargs['question_id'])
+        context['dynpoll_question'] = question
+
+        choices = Choice.objects.filter(question=question.pk).annotate(Count('vote'))
+        context['dynpoll_choices'] = choices
+
         return context
