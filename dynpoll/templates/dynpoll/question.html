@@ -1,3 +1,12 @@
+
+<h1>{{ dynpoll_question }}</h1>
+<div class="choices">
 {% for c in dynpoll_choices %}
-  {{ c }}
+  <div class="choice-item">
+    <form method="post">
+      {{ c }}
+      <button type="submit">{{ c.choice_text.value }}</button>
+    </form>
+  </div>
 {% endfor %}
+</div>

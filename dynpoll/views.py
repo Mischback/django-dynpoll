@@ -50,7 +50,8 @@ class QuestionView(FormView):
             dynpoll_choices.append(
                 ChoiceForm(data={
                     'question_id': self.question.pk,
-                    'choice_id': choice.pk
+                    'choice_id': choice.pk,
+                    'choice_text': choice.choice_text
                 })
             )
         context['dynpoll_choices'] = dynpoll_choices

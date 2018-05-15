@@ -7,6 +7,7 @@ from dynpoll.models import Question, Choice
 
 class ChoiceForm(forms.Form):
     choice_id = forms.IntegerField(widget=forms.HiddenInput)
+    choice_text = forms.CharField(widget=forms.HiddenInput, required=False)
     question_id = forms.IntegerField(widget=forms.HiddenInput)
 
     def clean(self):
