@@ -25,34 +25,22 @@ class QuestionView(FormView):
 
         return super().form_valid(form)
 
-    def get(self, request, question_id, *args, **kwargs):
-        """The 'get()'-method is overridden to show the question with its
-        answers."""
-
-        if not question_id:
-            raise self.QuestionViewError('No question ID was given!')
-
-        # get the Question object
-        self.question = get_object_or_404(Question, pk=question_id)
-
-        # get all the choices of this question
-        self.choices_list = Choice.objects.filter(question=question_id)
-
-        return super().get(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
 
         # fetch the existing context
         context = super().get_context_data(**kwargs)
 
-        # apply more context!
-        context['dynpoll_question'] = self.question
+        question_id = self.kwargs['question_id']
 
+        # apply more context!
+        context['dynpoll_question'] = get_object_or_404(Question, pk=question_id)
+
+        choices_list = Choice.objects.filter(question=question_id)
         dynpoll_choices = []
-        for choice in self.choices_list:
+        for choice in choices_list:
             dynpoll_choices.append(
                 ChoiceForm(data={
-                    'question_id': self.question.pk,
+                    'question_id': question_id,
                     'choice_id': choice.pk,
                     'choice_text': choice.choice_text
                 })
