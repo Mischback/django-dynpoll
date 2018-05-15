@@ -4,6 +4,7 @@ from dynpoll.forms import ChoiceForm
 from dynpoll.models import Choice, Question
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 
 
 class QuestionView(FormView):
@@ -12,13 +13,14 @@ class QuestionView(FormView):
 
     form_class = ChoiceForm
     template_name = 'dynpoll/question.html'
+    success_url = reverse_lazy('dynpoll:question', args=[1,])
 
     class QuestionViewError(Exception):
         pass
 
     def form_valid(self, form):
         """If the form is valid, actually perform the vote."""
-        form.perform_vote()
+        form.perform_vote(request=self.request)
 
         return super().form_valid(form)
 
