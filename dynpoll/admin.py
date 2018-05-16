@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+# Django imports
 from django.contrib import admin
 
-from dynpoll.models import Choice, Question, QuestionSequence, QuestionSequenceItem, Vote
-
+# app imports
+from dynpoll.models import (
+    Choice, Question, QuestionSequence, QuestionSequenceItem, Vote,
+)
 
 admin.site.register(Choice)
 admin.site.register(Question)

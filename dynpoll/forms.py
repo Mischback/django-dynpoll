@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.conf import settings
+# Django imports
 from django import forms
+from django.conf import settings
+
+# external imports
 from ipware import get_client_ip
 
+# app imports
 from dynpoll.models import Choice, Vote
 
 

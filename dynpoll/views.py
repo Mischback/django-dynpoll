@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from dynpoll.forms import ChoiceForm
-from dynpoll.models import Choice, Question, Vote
-from django.views.generic.edit import FormView
-from django.views.generic.base import TemplateView
+# Django imports
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.db.models import Count
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormView
+
+# app imports
+from dynpoll.forms import ChoiceForm
+from dynpoll.models import Choice, Question
 
 
 class QuestionView(FormView):

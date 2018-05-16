@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+# Django imports
 from django.urls import path
 
-from dynpoll.views import QuestionView, QuestionResultView
-
+# app imports
+from dynpoll.views import QuestionResultView, QuestionView
 
 app_name = 'dynpoll'
 urlpatterns = [

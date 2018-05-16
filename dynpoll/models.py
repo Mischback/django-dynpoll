@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+# Django imports
 from django.db import models
 
 
