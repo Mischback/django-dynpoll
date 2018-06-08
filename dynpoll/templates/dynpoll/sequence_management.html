@@ -1,3 +1,53 @@
-{% for question in dynpoll_questions %}
-  {{ question }}<br>
-{% endfor %}
+<div>
+  {% for item in dynpoll_sequence %}
+    {% if item.is_active %}
+    <div class="sequence-item-active">
+      {{ item.question }}
+      <div class="management-actions">
+        {% if item.polling_allowed %}
+        <form method="post">
+            <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
+            <input type="hidden" value="stop-polling" name="management_action">
+            <button type="submit">stop polling</button>
+          </form>
+        {% else %}
+        <form method="post">
+          <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
+          <input type="hidden" value="start-polling" name="management_action">
+          <button type="submit">start polling</button>
+        </form>
+        {% endif %}
+        <form method="post">
+          <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
+          <input type="hidden" value="show-results" name="management_action">
+          <button type="submit">show results</button>
+        </form>
+        <form method="post">
+          <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
+          <input type="hidden" value="deactivate-question" name="management_action">
+          <button type="submit">deactivate question</button>
+        </form>
+      </div>
+      <div>
+        <ul>
+          {% for choice in dynpoll_choices %}
+            {% if choice.question.pk == item.question.pk %}
+              <li>{{ choice }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% else %}
+    <div class="sequence-item-inactive">
+      {{ item.question }}
+      <form method="post">
+        <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
+        <input type="hidden" value="activate-question" name="management_action">
+        <button type="submit">activate question</button>
+      </form>
+    </div>
+    {% endif %}
+    <hr>
+  {% endfor %}
+</div>

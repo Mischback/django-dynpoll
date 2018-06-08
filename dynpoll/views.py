@@ -92,6 +92,7 @@ class QuestionSequenceManagementView(FormView):
 
         # build the context
         context = {}
+        context['dynpoll_sequence'] = sequence_items
         context['dynpoll_questions'] = questions
         context['dynpoll_choices'] = choices
 
