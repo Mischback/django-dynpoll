@@ -49,7 +49,7 @@ class ChoiceForm(forms.Form):
                 # TODO: don't raise error, simply redirect to result page!
                 raise forms.ValidationError('You already voted on this question!')
 
-        vote = Vote.objects.create(choice=choice, from_ip=from_ip)  # noqa
+        vote = Vote.objects.create(choice=choice, question=choice.question, from_ip=from_ip)  # noqa
 
 
 class QuestionSequenceManagementForm(forms.Form):

@@ -20,6 +20,7 @@ class Choice(models.Model):
 
 
 class Vote(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     from_ip = models.GenericIPAddressField()
 

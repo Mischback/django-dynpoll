@@ -1,29 +1,39 @@
 # -*- coding: utf-8 -*-
 
 # Django imports
+from django.conf import settings
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 
+# external imports
+from ipware import get_client_ip
+
 # app imports
 from dynpoll.forms import ChoiceForm, QuestionSequenceManagementForm
-from dynpoll.models import Choice, Question, QuestionSequenceItem
+from dynpoll.models import Choice, Question, QuestionSequenceItem, Vote
 
 
-class QuestionView(FormView):
-    """This view actually displays the question with its Choices and handles
-    the actual voting (by using the ChoiceForm-class)."""
+class VotingView(FormView):
+    """This view just handles everything to actually catch votes.
+    DO NOT USE directly!"""
 
     form_class = ChoiceForm
-    template_name = 'dynpoll/question.html'
 
     def form_valid(self, form):
         """If the form is valid, actually perform the vote."""
         form.perform_vote(request=self.request)
 
         return super().form_valid(form)
+
+
+class QuestionView(VotingView):
+    """This view actually displays the question with its Choices and handles
+    the actual voting (by using the ChoiceForm-class)."""
+
+    template_name = 'dynpoll/question.html'
 
     def get_context_data(self, **kwargs):
 
@@ -110,15 +120,11 @@ class QuestionSequenceManagementView(FormView):
         return reverse_lazy('dynpoll:sequence-management', args=[self.kwargs['sequence_id'], ])
 
 
-class QuestionSequenceView(FormView):
+class QuestionSequenceView(VotingView):
 
-    form_class = ChoiceForm
-
-    def form_valid(self, form):
-        """If the form is valid, actually perform the vote."""
-        form.perform_vote(request=self.request)
-
-        return super().form_valid(form)
+    class QuestionSequenceShowResultTrigger(Exception):
+        """This exception is raised to control, if the result page has to be
+        shown."""
 
     def get(self, request, *args, **kwargs):
 
@@ -128,23 +134,17 @@ class QuestionSequenceView(FormView):
         except Exception:
             raise
 
-        # fetch the currently active sequence item
-        try:
-            sequence_item = QuestionSequenceItem.objects.filter(is_active=True).get(sequence=sequence_id)
-        except QuestionSequenceItem.DoesNotExist:
-            sequence_item = None
-
         # prepare the context
         context = {}
         context['refresh-time'] = 10
 
-        # no active sequence item. Show blank page!
-        if not sequence_item:
-            template = 'dynpoll/inactive_sequence.html'
+        # fetch the currently active sequence item
+        try:
+            sequence_item = QuestionSequenceItem.objects.filter(is_active=True).get(sequence=sequence_id)
+        except QuestionSequenceItem.DoesNotExist:
+            return render(request, 'dynpoll/inactive_sequence.html', context=context)
 
-        # there is an active sequence item, meaning an active question!
-        else:
-
+        try:
             # get the question and its answers
             question = get_object_or_404(Question, pk=sequence_item.question.pk)
             choices = Choice.objects.filter(question=question.pk)
@@ -152,31 +152,34 @@ class QuestionSequenceView(FormView):
             context['dynpoll_question'] = question
 
             # voting currently in progress, show the voting view
-            if sequence_item.voting_allowed:
+            if not sequence_item.voting_allowed:
+                raise self.QuestionSequenceShowResultTrigger
 
-                # TODO: Handle the 'already voted' scenario!
+            from_ip = get_client_ip(request)[0]
+            votes = Vote.objects.filter(from_ip=from_ip).filter(question=question.pk)
+            if votes and not settings.DEBUG:
+                raise self.QuestionSequenceShowResultTrigger
 
-                template = 'dynpoll/question.html'
+            template = 'dynpoll/question.html'
 
-                # actually build the context to enable voting
-                dynpoll_choices = []
-                for choice in choices:
-                    dynpoll_choices.append(
-                        ChoiceForm(data={
-                            'question_id': question.pk,
-                            'choice_id': choice.pk,
-                            'choice_text': choice.choice_text
-                        })
-                    )
-                context['dynpoll_choices'] = dynpoll_choices
+            # actually build the context to enable voting
+            dynpoll_choices = []
+            for choice in choices:
+                dynpoll_choices.append(
+                    ChoiceForm(data={
+                        'question_id': question.pk,
+                        'choice_id': choice.pk,
+                        'choice_text': choice.choice_text
+                    })
+                )
+            context['dynpoll_choices'] = dynpoll_choices
 
-            else:
+        except self.QuestionSequenceShowResultTrigger:
+            template = 'dynpoll/question_result.html'
 
-                template = 'dynpoll/question_result.html'
-
-                # determine the actual votes
-                choices = choices.annotate(Count('vote'))
-                context['dynpoll_choices'] = choices
+            # determine the actual votes
+            choices = choices.annotate(Count('vote'))
+            context['dynpoll_choices'] = choices
 
         return render(request, template, context=context)
 
