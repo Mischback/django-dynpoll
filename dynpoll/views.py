@@ -8,7 +8,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 
 # app imports
-from dynpoll.forms import ChoiceForm
+from dynpoll.forms import ChoiceForm, QuestionSequenceManagementForm
 from dynpoll.models import Choice, Question, QuestionSequenceItem
 
 
@@ -74,6 +74,8 @@ class QuestionResultView(TemplateView):
 class QuestionSequenceManagementView(FormView):
     """This view enables control of QuestionSequences."""
 
+    form_class = QuestionSequenceManagementForm
+
     def get(self, request, *args, **kwargs):
 
         try:
@@ -97,3 +99,12 @@ class QuestionSequenceManagementView(FormView):
         context['dynpoll_choices'] = choices
 
         return render(request, 'dynpoll/sequence_management.html', context=context)
+
+    def form_valid(self, form):
+
+        form.execute_management_action()
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('dynpoll:sequence-management', args=[self.kwargs['sequence_id'], ])

@@ -39,8 +39,7 @@ class QuestionSequenceItem(models.Model):
     question = models.ForeignKey(Question, on_delete=models.SET_NULL, null=True)
     order = models.SmallIntegerField(default=1)
     is_active = models.BooleanField(default=False)
-    polling_allowed = models.BooleanField(default=False)
-    showing_results = models.BooleanField(default=False)
+    voting_allowed = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('sequence', 'question')

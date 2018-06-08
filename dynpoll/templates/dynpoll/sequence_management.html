@@ -4,24 +4,19 @@
     <div class="sequence-item-active">
       {{ item.question }}
       <div class="management-actions">
-        {% if item.polling_allowed %}
+        {% if item.voting_allowed %}
         <form method="post">
             <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
-            <input type="hidden" value="stop-polling" name="management_action">
-            <button type="submit">stop polling</button>
+            <input type="hidden" value="stop-voting" name="management_action">
+            <button type="submit">stop voting and show result page</button>
           </form>
         {% else %}
         <form method="post">
           <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
-          <input type="hidden" value="start-polling" name="management_action">
-          <button type="submit">start polling</button>
+          <input type="hidden" value="start-voting" name="management_action">
+          <button type="submit">start voting</button>
         </form>
         {% endif %}
-        <form method="post">
-          <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
-          <input type="hidden" value="show-results" name="management_action">
-          <button type="submit">show results</button>
-        </form>
         <form method="post">
           <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
           <input type="hidden" value="deactivate-question" name="management_action">
