@@ -114,6 +114,12 @@ class QuestionSequenceView(FormView):
 
     form_class = ChoiceForm
 
+    def form_valid(self, form):
+        """If the form is valid, actually perform the vote."""
+        form.perform_vote(request=self.request)
+
+        return super().form_valid(form)
+
     def get(self, request, *args, **kwargs):
 
         # get the sequence ID from URL
