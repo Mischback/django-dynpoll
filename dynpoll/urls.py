@@ -5,7 +5,8 @@ from django.urls import path
 
 # app imports
 from dynpoll.views import (
-    QuestionResultView, QuestionSequenceManagementView, QuestionView,
+    QuestionResultView, QuestionSequenceManagementView, QuestionSequenceView,
+    QuestionView,
 )
 
 app_name = 'dynpoll'
@@ -16,5 +17,6 @@ urlpatterns = [
         'sequence/<int:sequence_id>/management/',
         QuestionSequenceManagementView.as_view(),
         name='sequence-management'
-    )
+    ),
+    path('sequence/<int:sequence_id>/', QuestionSequenceView.as_view(), name='sequence'),
 ]

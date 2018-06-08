@@ -108,3 +108,71 @@ class QuestionSequenceManagementView(FormView):
 
     def get_success_url(self):
         return reverse_lazy('dynpoll:sequence-management', args=[self.kwargs['sequence_id'], ])
+
+
+class QuestionSequenceView(FormView):
+
+    form_class = ChoiceForm
+
+    def get(self, request, *args, **kwargs):
+
+        # get the sequence ID from URL
+        try:
+            sequence_id = self.kwargs['sequence_id']
+        except Exception:
+            raise
+
+        # fetch the currently active sequence item
+        try:
+            sequence_item = QuestionSequenceItem.objects.filter(is_active=True).get(sequence=sequence_id)
+        except QuestionSequenceItem.DoesNotExist:
+            sequence_item = None
+
+        # prepare the context
+        context = {}
+        context['refresh-time'] = 10
+
+        # no active sequence item. Show blank page!
+        if not sequence_item:
+            template = 'dynpoll/inactive_sequence.html'
+
+        # there is an active sequence item, meaning an active question!
+        else:
+
+            # get the question and its answers
+            question = get_object_or_404(Question, pk=sequence_item.question.pk)
+            choices = Choice.objects.filter(question=question.pk)
+
+            context['dynpoll_question'] = question
+
+            # voting currently in progress, show the voting view
+            if sequence_item.voting_allowed:
+
+                # TODO: Handle the 'already voted' scenario!
+
+                template = 'dynpoll/question.html'
+
+                # actually build the context to enable voting
+                dynpoll_choices = []
+                for choice in choices:
+                    dynpoll_choices.append(
+                        ChoiceForm(data={
+                            'question_id': question.pk,
+                            'choice_id': choice.pk,
+                            'choice_text': choice.choice_text
+                        })
+                    )
+                context['dynpoll_choices'] = dynpoll_choices
+
+            else:
+
+                template = 'dynpoll/question_result.html'
+
+                # determine the actual votes
+                choices = choices.annotate(Count('vote'))
+                context['dynpoll_choices'] = choices
+
+        return render(request, template, context=context)
+
+    def get_success_url(self):
+        return reverse_lazy('dynpoll:sequence', args=[self.kwargs['sequence_id'], ])

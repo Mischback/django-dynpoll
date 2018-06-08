@@ -8,7 +8,7 @@ from django.conf import settings
 from ipware import get_client_ip
 
 # app imports
-from dynpoll.models import Choice, Vote, QuestionSequenceItem
+from dynpoll.models import Choice, QuestionSequenceItem, Vote
 
 
 class ChoiceForm(forms.Form):
@@ -50,6 +50,7 @@ class ChoiceForm(forms.Form):
                 raise forms.ValidationError('You already voted on this question!')
 
         vote = Vote.objects.create(choice=choice, from_ip=from_ip)  # noqa
+
 
 class QuestionSequenceManagementForm(forms.Form):
     """asdf"""
