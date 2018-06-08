@@ -2,14 +2,14 @@
 
 # Django imports
 from django.db.models import Count
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 
 # app imports
 from dynpoll.forms import ChoiceForm
-from dynpoll.models import Choice, Question
+from dynpoll.models import Choice, Question, QuestionSequenceItem
 
 
 class QuestionView(FormView):
@@ -18,9 +18,6 @@ class QuestionView(FormView):
 
     form_class = ChoiceForm
     template_name = 'dynpoll/question.html'
-
-    class QuestionViewError(Exception):
-        pass
 
     def form_valid(self, form):
         """If the form is valid, actually perform the vote."""
@@ -72,3 +69,30 @@ class QuestionResultView(TemplateView):
         context['dynpoll_choices'] = choices
 
         return context
+
+
+class QuestionSequenceManagementView(FormView):
+    """This view enables control of QuestionSequences."""
+
+    def get(self, request, *args, **kwargs):
+
+        try:
+            sequence_id = self.kwargs['sequence_id']
+        except Exception:
+            raise
+
+        # find all SequenceItems
+        sequence_items = QuestionSequenceItem.objects.filter(sequence=sequence_id)
+
+        # find all associated Questions
+        questions = Question.objects.filter(pk__in=sequence_items.values_list('question', flat=True))
+
+        # find all associated Choices
+        choices = Choice.objects.filter(question__in=questions.values_list('pk', flat=True))
+
+        # build the context
+        context = {}
+        context['dynpoll_questions'] = questions
+        context['dynpoll_choices'] = choices
+
+        return render(request, 'dynpoll/sequence_management.html', context=context)
