@@ -10,6 +10,12 @@ dynpoll/base.html | DynPoll
 <link href="{% static 'dynpoll/style.css' %}" rel="stylesheet" type="text/css">
 {% endblock 'document-stylesheets' %}
 
+{% block 'additional-header' %}
+  {% if refresh_time %}
+<meta http-equiv="refresh" content="{{ refresh_time }}">
+  {% endif %}
+{% endblock 'additional-header' %}
+
 {% block 'main-content' %}
 <div class="element">
   <h1 class="brick align-right">django-dynpoll</h1>

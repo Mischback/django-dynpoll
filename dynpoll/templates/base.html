@@ -11,6 +11,10 @@
     <!-- place stylesheets here; remember: order DOES matter! -->
     <link rel="stylesheet" type="text/css" href="{% static 'grid.css' %}">
     {% endblock 'document-stylesheets' %}
+
+    {% block 'additional-header' %}
+    <!-- magic might happen here!-->
+    {% endblock 'additional-header' %}
   </head>
   <body>
     {% block 'layout' %}

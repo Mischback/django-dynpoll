@@ -136,7 +136,7 @@ class QuestionSequenceView(VotingView):
 
         # prepare the context
         context = {}
-        context['refresh-time'] = 10
+        context['refresh_time'] = 10
 
         # fetch the currently active sequence item
         try:
