@@ -1,9 +1,17 @@
-<h1>{{ dynpoll_question }}</h1>
-<div class="votes">
-{% for c in dynpoll_choices %}
-  <div class="vote-item">
+{% extends 'dynpoll/base.html' %}
+
+{% block 'document-title' %}
+{{ dynpoll_question }} | DynPoll
+{% endblock %}
+
+{% block 'main-content' %}
+<div class="element dynpoll-question-result">
+  <h1 class="brick">{{ dynpoll_question }}</h1>
+  {% for c in dynpoll_choices %}
+  <div class="brick dynpoll-question-choice-result">
     <h3>{{ c.choice_text }}</h3>
-    {{ c.vote__count }}
+    <div class="bar">{{ c.vote__count }}</div>
   </div>
-{% endfor %}
+  {% endfor %}
 </div>
+{% endblock 'main-content' %}
