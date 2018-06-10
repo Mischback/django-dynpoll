@@ -1,0 +1,42 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block 'document-title' %}base.html{% endblock %}</title>
+
+    {% block 'document-stylesheets' %}
+    <!-- place stylesheets here; remember: order DOES matter! -->
+    <link rel="stylesheet" type="text/css" href="{% static 'grid.css' %}">
+    {% endblock 'document-stylesheets' %}
+  </head>
+  <body>
+    {% block 'layout' %}
+    <!-- header -->
+    <header class="main-header">
+      {% block 'main-header' %}
+      <p><strong>header</strong> (Django-Block: main-header; CSS: main-header)</p>
+      {% endblock 'main-header' %}
+    </header>
+
+    <main class="main-content">
+      {% block 'main-content' %}
+      <p><strong>main</strong> (Django-Block: main-content; CSS: main-content)</p>
+      {% endblock 'main-content' %}
+    </main>
+
+    <!-- footer -->
+    <footer class="main-footer align-right">
+      {% block 'main-footer' %}
+      <p><strong>footer</strong> (Django-Block: main-footer; CSS: main-footer, align-right)</p>
+      {% endblock 'main-footer' %}
+    </footer>
+    {% endblock 'layout' %}
+
+    {% block 'document-script-files' %}
+    <!-- place script files here! -->
+    {% endblock 'document-script-files' %}
+  </body>
+</html>
