@@ -16,6 +16,10 @@ dynpoll/base.html | DynPoll
   {% endif %}
 {% endblock 'additional-header' %}
 
+{% block 'main-header' %}
+<img src="{% static 'dynpoll/img/lgan2016.png' %}" alt="Wappen LGAN 2016" title="Wappen LGAN 2016">
+{% endblock 'main-header' %}
+
 {% block 'main-content' %}
 <div class="element">
   <h1 class="brick align-right">django-dynpoll</h1>
