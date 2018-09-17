@@ -22,3 +22,6 @@ docs/build/
 # do NOT track compiled language files
 *.mo
 *.pot
+
+# do not track static binary assets
+dynpoll/static/dynpoll/img

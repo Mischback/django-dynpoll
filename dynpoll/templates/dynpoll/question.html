@@ -1,11 +1,19 @@
-<h1>{{ dynpoll_question }}</h1>
-<div class="choices">
-{% for c in dynpoll_choices %}
-  <div class="choice-item">
+{% extends 'dynpoll/base.html' %}
+
+{% block 'document-title' %}
+{{ dynpoll_question }} | DynPoll
+{% endblock %}
+
+{% block 'main-content' %}
+<div class="element dynpoll-question">
+<h1 class="brick">{{ dynpoll_question }}</h1>
+  {% for c in dynpoll_choices %}
+  <div class="brick dynpoll-question-choice">
     <form method="post">
       {{ c }}
-      <button type="submit">{{ c.choice_text.value }}</button>
+      <button class="form-brick dynpoll-question-answer-button" type="submit">{{ c.choice_text.value }}</button>
     </form>
   </div>
-{% endfor %}
+  {% endfor %}
 </div>
+{% endblock 'main-content' %}

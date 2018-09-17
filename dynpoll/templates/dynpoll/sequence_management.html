@@ -1,48 +1,48 @@
-<div>
+{% extends 'dynpoll/base.html' %}
+
+{% block 'document-title' %}
+Sequence Management | DynPoll
+{% endblock %}
+
+{% block 'main-content' %}
+<div class="dynpoll-management">
   {% for item in dynpoll_sequence %}
     {% if item.is_active %}
-    <div class="sequence-item-active">
-      {{ item.question }}
-      <div class="management-actions">
-        {% if item.voting_allowed %}
+  <div class="element sequence-item-active">
+      <h3 class="brick">{{ item.question }}</h3>
+      <div class="brick management-actions-container">
+      {% if item.voting_allowed %}
         <form method="post">
-            <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
-            <input type="hidden" value="stop-voting" name="management_action">
-            <button type="submit">stop voting and show result page</button>
-          </form>
-        {% else %}
+          <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
+          <input type="hidden" value="stop-voting" name="management_action">
+          <button class="form-brick stop-voting" type="submit">stop voting and show result page</button>
+        </form>
+      {% else %}
         <form method="post">
           <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
           <input type="hidden" value="start-voting" name="management_action">
-          <button type="submit">start voting</button>
+          <button class="form-brick start-voting" type="submit">start voting</button>
         </form>
-        {% endif %}
+      {% endif %}
         <form method="post">
           <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
           <input type="hidden" value="deactivate-question" name="management_action">
-          <button type="submit">deactivate question</button>
+          <button class="form-brick deactivate-question" type="submit">deactivate question</button>
         </form>
       </div>
-      <div>
-        <ul>
-          {% for choice in dynpoll_choices %}
-            {% if choice.question.pk == item.question.pk %}
-              <li>{{ choice }}</li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
+  </div>
     {% else %}
-    <div class="sequence-item-inactive">
-      {{ item.question }}
+  <div class="element sequence-item-inactive">
+    <h3 class="brick">{{ item.question }}</h3>
+    <div class="brick management-actions-container">
       <form method="post">
         <input type="hidden" value="{{ item.pk }}" name="sequence_item_id">
         <input type="hidden" value="activate-question" name="management_action">
-        <button type="submit">activate question</button>
+        <button class="form-brick activate-question" type="submit">activate question</button>
       </form>
     </div>
+  </div>
     {% endif %}
-    <hr>
   {% endfor %}
 </div>
+{% endblock 'main-content' %}

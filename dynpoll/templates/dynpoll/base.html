@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'document-title' %}
+dynpoll/base.html | DynPoll
+{% endblock %}
+
+{% block 'document-stylesheets' %}
+{{ block.super }}
+<link href="{% static 'dynpoll/style.css' %}" rel="stylesheet" type="text/css">
+{% endblock 'document-stylesheets' %}
+
+{% block 'additional-header' %}
+  {% if refresh_time %}
+<meta http-equiv="refresh" content="{{ refresh_time }}">
+  {% endif %}
+{% endblock 'additional-header' %}
+
+{% block 'main-header' %}
+<img src="{% static 'dynpoll/img/lgan2016.png' %}" alt="Wappen LGAN 2016" title="Wappen LGAN 2016">
+{% endblock 'main-header' %}
+
+{% block 'main-content' %}
+<div class="element">
+  <h1 class="brick align-right">django-dynpoll</h1>
+  <div class="brick">
+    <p><strong>django-dynpoll</strong> was created while working on a special presentation, that required live polls in the auditorium.</p>
+  </div>
+  <div class="brick">
+    <p>Usually you would find a collection of badges here, to show-off how well the development was done.</p>
+    <p>However, this is a quick'n'dirty rapid prototype thing, so there is no test-coverage, only basic PEP8-compliance and, honestly, I didn't even think about versioning up to now.</p>
+    <p>Documentation? Good one, buddy!</p>
+    <p>I <strong>might</strong> add some effort to this project, to make it actually nice and shiny. Or at least functional. But I don't think there is a real use-case for this application.</p>
+  </div>
+</div>
+{% endblock 'main-content' %}
+
+{% block 'main-footer' %}
+<a href="https://github.com/Mischback/django-dynpoll">django-dynpoll</a><strong>@github.com</strong>
+{% endblock 'main-footer' %}

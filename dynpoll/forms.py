@@ -90,9 +90,11 @@ class QuestionSequenceManagementForm(forms.Form):
             all_seq_items = QuestionSequenceItem.objects.filter(sequence=sequence_item.sequence).filter(is_active=True)
             for item in all_seq_items:
                 item.is_active = False
+                item.voting_allowed = False
                 item.save()
 
             sequence_item.is_active = True
+            sequence_item.voting_allowed = True
             sequence_item.save()
 
         elif 'deactivate-question' == self.cleaned_data['management_action']:

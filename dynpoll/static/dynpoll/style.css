@@ -1,0 +1,92 @@
+/*
+ */
+
+ /* ***** general layout ***** */
+.brick {
+    margin: 1.5rem;
+}
+
+.main-header img {
+    width: 8rem;
+}
+
+.main-footer {
+    font-size: 0.8rem;
+}
+
+/* ***** font styling ***** */
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;
+}
+
+a,
+a:visited,
+a:active {
+    color: #0000cc;
+    font-weight: bold;
+    text-decoration: none;
+}
+a:hover {
+    color: #cc0000;
+}
+
+h1 {
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 1.25em;
+}
+
+/* ***** form-elements ***** */
+button {
+    background-color: #0000cc;
+    margin: 0;
+    border: 0;
+    color: #eeeeee;
+}
+
+.form-brick {
+    border-radius: 0.25rem;
+    font-size: 1.5em;
+    padding: 0.125em 0.25em;
+    width: 100%;
+}
+
+/*
+    The actual answer button combines the default button with the 'form-brick'
+    class. In this most specific statement, only minor adjustments are made.
+*/
+.dynpoll-question-answer-button {
+    padding: 0.5em 1em;
+}
+
+
+.dynpoll-management .element {
+    margin: 1em;
+    border: 2px solid #333333;
+}
+.dynpoll-management .sequence-item-active {
+    background-color: #ccffcc;
+    border-color: #009900;
+}
+.dynpoll-management .sequence-item-inactive {
+    background-color: #ccc;
+    border-color: #cc0000;
+}
+
+.dynpoll-management .form-brick {
+    background-color: #333333;
+    font-size: 1.1em;
+    margin: 0.25em;
+    width: auto;
+}
+
+.dynpoll-management .stop-voting {
+    background-color: #990000;
+}
+
+.dynpoll-management .start-voting {
+    background-color: #006600;
+}

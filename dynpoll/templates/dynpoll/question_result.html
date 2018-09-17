@@ -1,9 +1,56 @@
-<h1>{{ dynpoll_question }}</h1>
-<div class="votes">
-{% for c in dynpoll_choices %}
-  <div class="vote-item">
+{% extends 'dynpoll/base.html' %}
+{% load static %}
+
+{% block 'document-title' %}
+{{ dynpoll_question }} | DynPoll
+{% endblock %}
+
+{% block 'main-content' %}
+<div class="element dynpoll-question-result">
+  <h1 class="brick">{{ dynpoll_question }}</h1>
+  {% for c in dynpoll_choices %}
+  <div class="brick dynpoll-question-choice-result">
     <h3>{{ c.choice_text }}</h3>
-    {{ c.vote__count }}
+    <div class="bar">{{ c.vote__count }}</div>
   </div>
-{% endfor %}
+  {% endfor %}
+  <canvas id="dynpoll-result-chart"></canvas>
 </div>
+{% endblock 'main-content' %}
+
+{% block 'document-script-files' %}
+{{ block.super }}
+<script src="{% static 'dynpoll/lib/Chart.bundle.min.js' %}"></script>
+<script>
+  var ctx = document.getElementById('dynpoll-result-chart');
+  var myChart = new Chart(ctx, {
+    type: 'horizontalBar',
+    data: {
+        labels: [
+          {% for c in dynpoll_choices %}
+          "{{ c.choice_text }}",
+          {% endfor %}
+        ],
+        datasets: [{
+            label: '# of Votes',
+            data: [
+            {% for c in dynpoll_choices %}
+            "{{ c.vote__count }}",
+            {% endfor %}
+            0,
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+</script>
+{% endblock 'document-script-files' %}

@@ -1,0 +1,23 @@
+{% extends 'dynpoll/base.html' %}
+
+{% block 'document-title' %}
+no active question | DynPoll
+{% endblock %}
+
+{% block 'document-stylesheets' %}
+{{ block.super }}
+<style>
+  body {
+    background-color: #000;
+    color: #333;
+  }
+</style>
+{% endblock 'document-stylesheets' %}
+
+{% block 'main-content' %}
+<p style="font-size: 3em; font-weight: bold;">no active question</p>
+<p>Please stand by...</p>
+{% endblock 'main-content' %}
+
+{% block 'main-header' %}{% endblock 'main-header' %}
+{% block 'main-footer' %}{% endblock 'main-footer' %}
